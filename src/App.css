@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+body, html {
+  height: 100%; /* S'assure que la hauteur de la page occupe tout l'espace */
+  margin: 0; /* Supprime les marges par défaut du navigateur */
+  display: flex;
+  justify-content: center; /* Centre le contenu horizontalement */
+  align-items: center; /* Centre le contenu verticalement */
+}
+
+.canvas-container {
+  display: flex;
+  justify-content: center; /* Centre le canevas horizontalement */
+  align-items: center; /* Centre le canevas verticalement */
+}
