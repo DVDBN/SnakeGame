@@ -3,11 +3,13 @@ name: Deploy React App to GitHub Pages
 on:
   push:
     branches:
-      - main  # Ce workflow s'exécute lorsqu'il y a une mise à jour sur la branche main
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Cette ligne accorde l'accès en écriture aux contenus du dépôt
 
     steps:
     - name: Checkout the code
@@ -16,7 +18,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '22.14.0'  # Utilise la version de Node.js que tu utilises dans ton projet
+        node-version: '22.14.0'
 
     - name: Install dependencies
       run: |
@@ -29,8 +31,8 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        branch: gh-pages  # La branche de déploiement
-        folder: build     # Le dossier à déployer (la sortie de build)
+        branch: gh-pages
+        folder: build
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Clean up
