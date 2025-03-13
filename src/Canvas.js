@@ -7,7 +7,7 @@ const Canvas = () => {
     const entitySize = 10
 
     const canvasRef = useRef(null);
-    const [snake,setSnake] = useState(new Snake(Math.round(canvasSize/2), Math.round(canvasSize/2),entitySize)) // Créer une instance du serpent à une position donnée
+    const [snake, setSnake] = useState(new Snake(Math.round(canvasSize / 2 / entitySize) * entitySize, Math.round(canvasSize / 2 / entitySize) * entitySize, entitySize));
     const [direction, setDirection] = useState('right'); // Initialiser la direction du serpent
     const [food,setFood] = useState(new Food(canvasSize, canvasSize,entitySize))
 
@@ -15,8 +15,15 @@ const Canvas = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             const newSnake = new Snake(snake.body[0].x, snake.body[0].y, entitySize);  // Créer une nouvelle instance du serpent avec la taille correcte
-          newSnake.body = [...snake.getBody()]; // Copier l'état actuel du serpent
-          newSnake.move(direction); // Déplacer le serpent
+            newSnake.body = [...snake.getBody()]; // Copier l'état actuel du serpent
+            newSnake.move(direction); // Déplacer le serpent
+
+            // Vérifier si la tête du serpent a mangé la nourriture
+            if (newSnake.getBody()[0].x === food.body[0].x && newSnake.getBody()[0].y === food.body[0].y) {
+                // Si la nourriture est mangée, régénérer la nourriture
+                food.regenerate(canvasSize, canvasSize);
+            }
+
           setSnake(newSnake); // Mettre à jour le serpent
         }, 100);
     
@@ -42,9 +49,7 @@ const Canvas = () => {
     const context = canvas.getContext('2d');
 
     const drawSnake = () => {
-
         context.fillStyle = 'green';  // Définir la couleur du serpent
-
         // Dessiner chaque segment du serpent
         snake.body.forEach(segment => {
         context.fillRect(segment.x, segment.y, entitySize, entitySize);  // Dessiner chaque segment comme un carré de 10x10 pixels
@@ -57,7 +62,6 @@ const Canvas = () => {
         food.body.forEach(segment => {
             context.fillRect(segment.x, segment.y, entitySize, entitySize);  // Dessiner chaque segment comme un carré de 10x10 pixels
     });
-
     }
 
     const draw = () => {
@@ -65,6 +69,9 @@ const Canvas = () => {
         drawFood();  // Dessiner food
         drawSnake();  // Dessiner le serpent au chargement
     }
+
+
+
 
     draw();
 
