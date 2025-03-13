@@ -2,8 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import Snake from './Snake';  // Assure-toi que la classe Snake est bien importée
 
 const Canvas = () => {
+    const size = 500
+
     const canvasRef = useRef(null);
-    const snake = new Snake(50, 50); // Créer une instance du serpent à une position donnée
+    const snake = new Snake(Math.round(size/2), Math.round(size/2)); // Créer une instance du serpent à une position donnée
 
     useEffect(() => {
     const canvas = canvasRef.current;
