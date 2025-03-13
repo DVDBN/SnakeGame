@@ -20,8 +20,10 @@ const Canvas = () => {
 
             // Vérifier si la tête du serpent a mangé la nourriture
             if (newSnake.getBody()[0].x === food.body[0].x && newSnake.getBody()[0].y === food.body[0].y) {
+                newSnake.grow(); // Le serpent grandit
                 // Si la nourriture est mangée, régénérer la nourriture
                 food.regenerate(canvasSize, canvasSize);
+                
             }
 
           setSnake(newSnake); // Mettre à jour le serpent

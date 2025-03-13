@@ -14,7 +14,6 @@ class Snake {
         // Calculer la nouvelle tête du serpent en fonction de la direction
         if (direction === 'up') {
             newHead = { x: head.x, y: head.y - this.size }; // Déplacement vers le haut
-            console.log(this.size)
         } else if (direction === 'down') {
             newHead = { x: head.x, y: head.y + this.size }; // Déplacement vers le bas
         } else if (direction === 'left') {
@@ -26,6 +25,12 @@ class Snake {
         // Déplacer le serpent : ajouter une nouvelle tête et retirer la dernière partie
         this.body.unshift(newHead); // Ajoute la nouvelle tête au début du tableau
         this.body.pop(); // Supprime la dernière partie du serpent
+    }
+
+    // Ajouter un segment au serpent (lorsqu'il mange la nourriture)
+    grow() {
+        const lastSegment = this.body[this.body.length - 1];
+        this.body.push({ x: lastSegment.x, y: lastSegment.y });
     }
 
     // Retourner les coordonnées du serpent
