@@ -14,6 +14,7 @@ class Snake {
         // Calculer la nouvelle tête du serpent en fonction de la direction
         if (direction === 'up') {
             newHead = { x: head.x, y: head.y - this.size }; // Déplacement vers le haut
+            console.log(this.size)
         } else if (direction === 'down') {
             newHead = { x: head.x, y: head.y + this.size }; // Déplacement vers le bas
         } else if (direction === 'left') {
