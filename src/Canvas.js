@@ -4,7 +4,7 @@ import Food from './Food';
 
 const Canvas = () => {
     const canvasSize = 500
-    const entitySize = 25
+    const entitySize = 10
 
     const canvasRef = useRef(null);
     const [snake,setSnake] = useState(new Snake(Math.round(canvasSize/2), Math.round(canvasSize/2),entitySize)) // Créer une instance du serpent à une position donnée
