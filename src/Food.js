@@ -2,8 +2,8 @@ class Food {
     constructor(height = 500, width = 500, size = 10){
         this.body = [
             {
-                x : Math.min(Math.floor(Math.random() * (height / size)) * size + size),
-                y : Math.min(Math.floor(Math.random() * (width / size)) * size + size)
+                x: Math.floor(Math.random() * (Math.floor(width / size))) * size,  // Position x
+                y: Math.floor(Math.random() * (Math.floor(height / size))) * size,  // Position y
             },
         ]
         this.size = size
