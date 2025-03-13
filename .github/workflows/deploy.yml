@@ -27,7 +27,7 @@ jobs:
         npm run build
 
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
+      uses: DVDBN/github-pages-deploy-action@v4
       with:
         branch: gh-pages  # La branche de déploiement
         folder: build     # Le dossier à déployer (la sortie de build)
