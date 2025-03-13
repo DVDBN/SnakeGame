@@ -31,6 +31,7 @@ jobs:
       with:
         branch: gh-pages  # La branche de déploiement
         folder: build     # Le dossier à déployer (la sortie de build)
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Clean up
       run: |
