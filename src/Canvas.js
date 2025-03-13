@@ -1,11 +1,38 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Snake from './Snake';  // Assure-toi que la classe Snake est bien importée
 
 const Canvas = () => {
     const size = 500
 
     const canvasRef = useRef(null);
-    const snake = new Snake(Math.round(size/2), Math.round(size/2)); // Créer une instance du serpent à une position donnée
+    const [snake,setSnake] = useState(new Snake(Math.round(size/2), Math.round(size/2))) // Créer une instance du serpent à une position donnée
+    const [direction, setDirection] = useState('right'); // Initialiser la direction du serpent
+
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+          const newSnake = new Snake();
+          newSnake.body = [...snake.getBody()]; // Copier l'état actuel du serpent
+          newSnake.move(direction); // Déplacer le serpent
+          setSnake(newSnake); // Mettre à jour le serpent
+        }, 100);
+    
+        return () => clearInterval(interval);
+    }, [snake, direction]);
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'ArrowUp') setDirection('up');
+        if (e.key === 'ArrowDown') setDirection('down');
+        if (e.key === 'ArrowLeft') setDirection('left');
+        if (e.key === 'ArrowRight') setDirection('right');
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+        return () => {
+          window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
 
     useEffect(() => {
     const canvas = canvasRef.current;
