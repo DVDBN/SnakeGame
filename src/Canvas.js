@@ -15,7 +15,8 @@ const Canvas = () => {
         )
     );
     const [food, setFood] = useState(new Food(canvasSize, canvasSize, entitySize));
-    const [gameOver, setGameOver] = useState(false); // Ajout d'une variable pour suivre l'état du jeu
+    const [gameOver, setGameOver] = useState(false); // État pour suivre la défaite
+    const [score, setScore] = useState(0); // Ajout du score
 
     // Liste des directions enregistrées (queue)
     const inputQueueRef = useRef([]);
@@ -48,6 +49,7 @@ const Canvas = () => {
             if (newSnake.getBody()[0].x === food.body[0].x && newSnake.getBody()[0].y === food.body[0].y) {
                 newSnake.grow();
                 setFood(new Food(canvasSize, canvasSize, entitySize)); // Régénérer la nourriture
+                setScore(prevScore => prevScore + 100); // Incrémenter le score de 100
             }
 
             // Mettre à jour le serpent
@@ -136,20 +138,27 @@ const Canvas = () => {
     }, [snake, food]);
 
     return (
-        <div className="relative h-full">
-            <canvas
-                ref={canvasRef}
-                width={canvasSize}
-                height={canvasSize}
-                className="border border-black"
-            />
-            {gameOver && (
-                <div
-                    className="absolute bottom-0 left-0 w-full text-center text-xl text-red-600 bg-black bg-opacity-50 py-2"
-                >
-                    Game Over: You collided with yourself or went out of bounds!
-                </div>
-            )}
+        <div className="flex flex-col items-center">
+            <div className="relative">
+                <canvas
+                    ref={canvasRef}
+                    width={canvasSize}
+                    height={canvasSize}
+                    className="border border-black"
+                />
+                {gameOver && (
+                    <div
+                        className="absolute bottom-0 left-0 w-full text-center text-xl text-red-600 bg-black bg-opacity-50 py-2"
+                    >
+                        Game Over: You collided with yourself or went out of bounds!
+                    </div>
+                )}
+            </div>
+
+            {/* Affichage du score en dehors du canvas */}
+            <div className="mt-4 text-xl font-bold text-white bg-black bg-opacity-50 py-2 px-4 rounded-lg">
+                Score: {score}
+            </div>
         </div>
     );
 };
