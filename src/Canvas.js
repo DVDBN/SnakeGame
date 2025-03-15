@@ -32,9 +32,15 @@ const Canvas = () => {
             newSnake.body = [...snake.getBody()];
             newSnake.move(directionToMove);
 
-            // Vérifier la collision avec soi-même avant de faire grandir le serpent
+            // Vérification de la collision avec soi-même
             if (isCollidingWithSelf(newSnake)) {
                 setGameOver(true); // Arrêter le jeu en cas de collision avec soi-même
+                return;
+            }
+
+            // Vérification si le serpent sort du canvas
+            if (isOutOfBounds(newSnake)) {
+                setGameOver(true); // Arrêter le jeu si le serpent sort du canvas
                 return;
             }
 
@@ -63,6 +69,12 @@ const Canvas = () => {
             }
         }
         return false; // Pas de collision
+    };
+
+    // Vérification si le serpent sort du canvas
+    const isOutOfBounds = (snake) => {
+        const head = snake.getBody()[0];
+        return head.x < 0 || head.x >= canvasSize || head.y < 0 || head.y >= canvasSize;
     };
 
     const handleKeyPress = (e) => {
@@ -135,7 +147,7 @@ const Canvas = () => {
                 <div
                     className="absolute bottom-0 left-0 w-full text-center text-xl text-red-600 bg-black bg-opacity-50 py-2"
                 >
-                    Game Over: You collided with yourself!
+                    Game Over: You collided with yourself or went out of bounds!
                 </div>
             )}
         </div>
