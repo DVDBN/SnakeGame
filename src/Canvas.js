@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Snake from './Snake';  // Assure-toi que la classe Snake est bien importée
+import Snake from './Snake';
 import Food from './Food';
 
 const Canvas = () => {
@@ -14,48 +14,68 @@ const Canvas = () => {
             entitySize
         )
     );
-    const [direction, setDirection] = useState('right'); // Initialiser la direction du serpent
     const [food, setFood] = useState(new Food(canvasSize, canvasSize, entitySize));
+
+    // Utilisation de useRef pour éviter les re-renders inutiles
+    const directionsRef = useRef(['right']); // Stocke l'historique des directions
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const newSnake = new Snake(snake.body[0].x, snake.body[0].y, entitySize);  // Créer une nouvelle instance du serpent avec la taille correcte
-            newSnake.body = [...snake.getBody()]; // Copier l'état actuel du serpent
-            newSnake.move(direction); // Déplacer le serpent
+            if (!snake.body || snake.body.length === 0) return;
 
-            // Vérifier si la tête du serpent a mangé la nourriture
+            // Lire et vider la liste des directions
+            if (directionsRef.current.length > 1) {
+                directionsRef.current = [directionsRef.current[directionsRef.current.length - 1]];
+            }
+
+            const currentDirection = directionsRef.current[0]; // Dernière direction valide
+
+            const newSnake = new Snake(snake.body[0].x, snake.body[0].y, entitySize);
+            newSnake.body = [...snake.getBody()];
+            newSnake.move(currentDirection);
+
+            // Vérifier si le serpent mange la nourriture
             if (newSnake.getBody()[0].x === food.body[0].x && newSnake.getBody()[0].y === food.body[0].y) {
-                newSnake.grow(); // Le serpent grandit
-                // Si la nourriture est mangée, régénérer la nourriture et mettre à jour l'état de food
+                newSnake.grow();
                 setFood(new Food(canvasSize, canvasSize, entitySize));
             }
 
-            setSnake(newSnake); // Mettre à jour le serpent
+            setSnake(newSnake);
         }, 100);
-    
+
         return () => clearInterval(interval);
-    }, [snake, direction, food]);
+    }, [snake, food]);
 
     const handleKeyPress = (e) => {
-        setDirection((prevDirection) => {
-            if (e.key === 'ArrowUp' && prevDirection !== 'down') {
-                return 'up';
-            } else if (e.key === 'ArrowDown' && prevDirection !== 'up') {
-                return 'down';
-            } else if (e.key === 'ArrowLeft' && prevDirection !== 'right') {
-                return 'left';
-            } else if (e.key === 'ArrowRight' && prevDirection !== 'left') {
-                return 'right';
+        const lastDirection = directionsRef.current[directionsRef.current.length - 1];
+
+        const newDirection = {
+            ArrowUp: 'up',
+            ArrowDown: 'down',
+            ArrowLeft: 'left',
+            ArrowRight: 'right',
+        }[e.key];
+
+        if (!newDirection) return; // Ignorer les touches non valides
+
+        const oppositeDirection = {
+            up: 'down',
+            down: 'up',
+            left: 'right',
+            right: 'left',
+        }[lastDirection];
+
+        if (newDirection !== oppositeDirection) {
+            directionsRef.current.push(newDirection);
+            if (directionsRef.current.length > 2) {
+                directionsRef.current.shift(); // Garder uniquement les 2 dernières directions
             }
-            return prevDirection; // Si la direction est invalide, on garde l'ancienne
-        });
+        }
     };
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyPress);
-        return () => {
-            window.removeEventListener('keydown', handleKeyPress);
-        };
+        return () => window.removeEventListener('keydown', handleKeyPress);
     }, []);
 
     useEffect(() => {
@@ -63,30 +83,27 @@ const Canvas = () => {
         const context = canvas.getContext('2d');
 
         const drawSnake = () => {
-            context.fillStyle = 'green';  // Définir la couleur du serpent
-            // Dessiner chaque segment du serpent
+            context.fillStyle = 'green';
             snake.body.forEach(segment => {
-                context.fillRect(segment.x, segment.y, entitySize, entitySize);  // Dessiner chaque segment comme un carré de 10x10 pixels
+                context.fillRect(segment.x, segment.y, entitySize, entitySize);
             });
         };
 
         const drawFood = () => {
-            context.fillStyle = 'red';  // Définir la couleur du serpent
-            // Dessiner la nourriture
+            context.fillStyle = 'red';
             food.body.forEach(segment => {
-                context.fillRect(segment.x, segment.y, entitySize, entitySize);  // Dessiner chaque segment comme un carré de 10x10 pixels
+                context.fillRect(segment.x, segment.y, entitySize, entitySize);
             });
         };
 
         const draw = () => {
-            context.clearRect(0, 0, canvas.width, canvas.height);  // Effacer le canevas à chaque redessin
-            drawFood();  // Dessiner la nourriture
-            drawSnake();  // Dessiner le serpent
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            drawFood();
+            drawSnake();
         };
 
         draw();
-
-    }, [snake, food]); // Ajout de 'food' pour redessiner à chaque changement de nourriture
+    }, [snake, food]);
 
     return (
         <div className="canvas-container">
