@@ -37,10 +37,18 @@ const Canvas = () => {
     }, [snake, direction, food]);
 
     const handleKeyPress = (e) => {
-        if (e.key === 'ArrowUp') setDirection('up');
-        if (e.key === 'ArrowDown') setDirection('down');
-        if (e.key === 'ArrowLeft') setDirection('left');
-        if (e.key === 'ArrowRight') setDirection('right');
+        setDirection((prevDirection) => {
+            if (e.key === 'ArrowUp' && prevDirection !== 'down') {
+                return 'up';
+            } else if (e.key === 'ArrowDown' && prevDirection !== 'up') {
+                return 'down';
+            } else if (e.key === 'ArrowLeft' && prevDirection !== 'right') {
+                return 'left';
+            } else if (e.key === 'ArrowRight' && prevDirection !== 'left') {
+                return 'right';
+            }
+            return prevDirection; // Si la direction est invalide, on garde l'ancienne
+        });
     };
 
     useEffect(() => {
