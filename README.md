@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# Snake Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Un jeu classique de Snake développé en utilisant React et le Canvas HTML5. Le but du jeu est de contrôler le serpent pour qu'il mange la nourriture (représentée par un carré rouge) et grandisse à chaque fois, tout en évitant de se mordre soi-même ou de sortir du canvas. Le score augmente de 100 points à chaque fois que le serpent mange la nourriture.
 
-## Available Scripts
+## Fonctionnalités
 
-In the project directory, you can run:
+- Déplacement du serpent avec les touches fléchées du clavier (haut, bas, gauche, droite).
+- Le serpent grandit lorsqu'il mange la nourriture.
+- Un score est affiché qui augmente de 100 à chaque fois que le serpent mange la nourriture.
+- Le jeu se termine si le serpent entre en collision avec lui-même ou s'il sort des limites du canvas.
+- Affichage d'un message "Game Over" lorsqu'une des conditions de défaite est remplie.
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Pour installer et jouer à ce jeu en local, suivez ces étapes :
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Clonez ce repository sur votre machine locale :
 
-### `npm test`
+    ```bash
+    git clone https://github.com/DVDBN/SnakeGame.git
+    ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Allez dans le dossier du projet :
 
-### `npm run build`
+    ```bash
+    cd SnakeGame
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Installez les dépendances :
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    ```bash
+    npm install
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Lancez l'application en mode développement :
 
-### `npm run eject`
+    ```bash
+    npm start
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    Cela ouvrira l'application dans votre navigateur par défaut (généralement à l'adresse `http://localhost:3000`).
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Jouer en ligne
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Vous pouvez jouer à ce jeu en ligne en utilisant la version hébergée sur GitHub Pages. Cliquez sur le lien ci-dessous pour jouer en ligne.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[**Jouer au Snake Game en ligne**](https://dvdbn.github.io/SnakeGame/)
