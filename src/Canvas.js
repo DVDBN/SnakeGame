@@ -3,7 +3,7 @@ import Snake from './Snake';  // Assure-toi que la classe Snake est bien importÃ
 import Food from './Food';
 
 const Canvas = () => {
-    const canvasSize = 500;
+    const canvasSize = 300;
     const entitySize = 10;
 
     const canvasRef = useRef(null);
