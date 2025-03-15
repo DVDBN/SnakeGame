@@ -5,49 +5,68 @@ import Food from './Food';
 const Canvas = () => {
     const canvasSize = 300;
     const entitySize = 10;
-
     const canvasRef = useRef(null);
+
     const [snake, setSnake] = useState(
         new Snake(
-            Math.round(canvasSize / 2 / entitySize) * entitySize, 
-            Math.round(canvasSize / 2 / entitySize) * entitySize, 
+            Math.round(canvasSize / 2 / entitySize) * entitySize,
+            Math.round(canvasSize / 2 / entitySize) * entitySize,
             entitySize
         )
     );
     const [food, setFood] = useState(new Food(canvasSize, canvasSize, entitySize));
+    const [gameOver, setGameOver] = useState(false); // Ajout d'une variable pour suivre l'état du jeu
 
-    // Utilisation de useRef pour éviter les re-renders inutiles
-    const directionsRef = useRef(['right']); // Stocke l'historique des directions
+    // Liste des directions enregistrées (queue)
+    const inputQueueRef = useRef([]);
+    const currentDirectionRef = useRef('right'); // Direction actuelle
 
     useEffect(() => {
         const interval = setInterval(() => {
-            if (!snake.body || snake.body.length === 0) return;
+            if (!snake.body || snake.body.length === 0 || gameOver) return;
 
-            // Lire et vider la liste des directions
-            if (directionsRef.current.length > 1) {
-                directionsRef.current = [directionsRef.current[directionsRef.current.length - 1]];
-            }
-
-            const currentDirection = directionsRef.current[0]; // Dernière direction valide
+            // Appliquer l'input enregistré, si disponible, sinon continuer la direction actuelle
+            const directionToMove = inputQueueRef.current.length > 0 ? inputQueueRef.current.shift() : currentDirectionRef.current;
 
             const newSnake = new Snake(snake.body[0].x, snake.body[0].y, entitySize);
             newSnake.body = [...snake.getBody()];
-            newSnake.move(currentDirection);
+            newSnake.move(directionToMove);
+
+            // Vérifier la collision avec soi-même avant de faire grandir le serpent
+            if (isCollidingWithSelf(newSnake)) {
+                setGameOver(true); // Arrêter le jeu en cas de collision avec soi-même
+                return;
+            }
 
             // Vérifier si le serpent mange la nourriture
             if (newSnake.getBody()[0].x === food.body[0].x && newSnake.getBody()[0].y === food.body[0].y) {
                 newSnake.grow();
-                setFood(new Food(canvasSize, canvasSize, entitySize));
+                setFood(new Food(canvasSize, canvasSize, entitySize)); // Régénérer la nourriture
             }
 
+            // Mettre à jour le serpent
             setSnake(newSnake);
+
+            // Mettre à jour la direction actuelle
+            currentDirectionRef.current = directionToMove;
         }, 100);
 
-        return () => clearInterval(interval);
-    }, [snake, food]);
+        return () => clearInterval(interval); // Nettoyage du setInterval au démontage du composant
+    }, [snake, food, gameOver]);
+
+    // Vérification de la collision avec soi-même
+    const isCollidingWithSelf = (snake) => {
+        const head = snake.getBody()[0];
+        for (let i = 1; i < snake.getBody().length; i++) {
+            if (snake.getBody()[i].x === head.x && snake.getBody()[i].y === head.y) {
+                return true; // Collision avec soi-même
+            }
+        }
+        return false; // Pas de collision
+    };
 
     const handleKeyPress = (e) => {
-        const lastDirection = directionsRef.current[directionsRef.current.length - 1];
+        const lastDirection = currentDirectionRef.current; // Direction actuelle
 
         const newDirection = {
             ArrowUp: 'up',
@@ -58,6 +77,7 @@ const Canvas = () => {
 
         if (!newDirection) return; // Ignorer les touches non valides
 
+        // Empêcher les changements de direction vers l'opposée immédiate
         const oppositeDirection = {
             up: 'down',
             down: 'up',
@@ -65,11 +85,9 @@ const Canvas = () => {
             right: 'left',
         }[lastDirection];
 
+        // Si la direction n'est pas opposée à la précédente, l'ajouter à la queue d'entrées
         if (newDirection !== oppositeDirection) {
-            directionsRef.current.push(newDirection);
-            if (directionsRef.current.length > 2) {
-                directionsRef.current.shift(); // Garder uniquement les 2 dernières directions
-            }
+            inputQueueRef.current.push(newDirection);
         }
     };
 
@@ -98,21 +116,28 @@ const Canvas = () => {
 
         const draw = () => {
             context.clearRect(0, 0, canvas.width, canvas.height);
-            drawFood();
-            drawSnake();
+            drawFood();  // Dessiner la nourriture
+            drawSnake();  // Dessiner le serpent
         };
 
-        draw();
+        draw(); // Dessiner les éléments après chaque mise à jour
     }, [snake, food]);
 
     return (
-        <div className="canvas-container">
+        <div className="relative h-full">
             <canvas
                 ref={canvasRef}
                 width={canvasSize}
                 height={canvasSize}
-                style={{ border: '1px solid black' }}
+                className="border border-black"
             />
+            {gameOver && (
+                <div
+                    className="absolute bottom-0 left-0 w-full text-center text-xl text-red-600 bg-black bg-opacity-50 py-2"
+                >
+                    Game Over: You collided with yourself!
+                </div>
+            )}
         </div>
     );
 };
